@@ -17,7 +17,6 @@ def take(file_name):
         print("[!] Miss...")
     else:
         print("[*] Success!")
-        print(file_name)
         cv2.imwrite(file_name, im)
         print("Saved in {}".format(file_name))
 
