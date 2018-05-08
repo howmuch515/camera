@@ -1,17 +1,22 @@
 import cv2, argparse
+from pathlib import Path
+
+CURRENT_PATH = str(Path.cwd())
+HOME_PATH = str(Path.home())
+DEFAULT_PATH = HOME_PATH + "/Pictures/CAMERA/camera_picture.jpg"
 
 def main():
     parser = argparse.ArgumentParser(description="Take a picture.")
-    parser.add_argument('file_name', metavar="FILE_NAME", help="picture's name")
-    parser.add_argument('-n', '--file_name', help="picture's name")
+    parser.add_argument('-n', '--file_name', metavar="FILE_NAME", action="store", help="picture's name", default=DEFAULT_PATH)
     parser.add_argument('-v', '--version', action="version", version="Ver.0.0")
 
     args = parser.parse_args()
 
-    FILE_NAME = args.file_name
-
     # init
-    FILE_PATH = "/tmp/" + FILE_NAME + ".jpg"
+    FILE_NAME = args.file_name
+    if FILE_NAME != DEFAULT_PATH:
+        FILE_NAME = CURRENT_PATH + '/' + FILE_NAME + ".jpg"
+
     cap = cv2.VideoCapture(0)
     for i in range(3):
         cap.read() # 初期の写真はカメラが起動して間もないため暗いので、捨てる
@@ -22,7 +27,8 @@ def main():
         print("[!] Miss...")
     else:
         print("[*] Success!")
-        cv2.imwrite(FILE_PATH, im)
+        cv2.imwrite(FILE_NAME, im)
+        print("Saved in {}".format(FILE_NAME))
 
     # fini
     cap.release()
