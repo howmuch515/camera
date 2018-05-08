@@ -1,5 +1,6 @@
 import cv2, argparse
 from pathlib import Path
+from time import sleep
 
 CURRENT_PATH = str(Path.cwd())
 HOME_PATH = str(Path.home())
@@ -29,11 +30,18 @@ def continuous_shoot(file_name, number):
     for i in range(number):
         take(file_name + str(i))
 
+def timer(t):
+    timer_count = int(t)
+    for i in range(timer_count):
+        last_time = timer_count - i
+        print("{}...".format(last_time))
+        sleep(1)
 
 def main():
     parser = argparse.ArgumentParser(description="Take a picture.")
     parser.add_argument('-n', '--file_name', metavar="FILE_NAME", action="store", help="picture's name", default=DEFAULT_PATH)
     parser.add_argument('-c', '--continuous', action="store_true", help="continuous shooting", default=False)
+    parser.add_argument('-t', '--timer', action="store", help="self timer", default=0)
     parser.add_argument('-v', '--version', action="version", version="Ver.0.0")
 
     args = parser.parse_args()
@@ -43,10 +51,11 @@ def main():
     if FILE_NAME != DEFAULT_PATH:
         FILE_NAME = CURRENT_PATH + '/' + FILE_NAME
 
-    b = args.continuous
-    print("c -> {}".format(b))
+    # timer
+    timer(args.timer)
+
     if args.continuous:
-        continuous_shoot(FILE_NAME, 0x10)
+        continuous_shoot(FILE_NAME, 5)
     else:
         take(FILE_NAME)
 
